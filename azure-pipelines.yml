@@ -1,20 +1,38 @@
 trigger:
 - main
 
-pool:
-  vmImage: ubuntu-latest
+resources:
+- repo: self
 
-steps:
-- script: |
-    echo "Current directory:"
-    pwd
+variables:
+  dockerRegistryServiceConnection: 'itatarov'
+  imageRepository: 'ivanttrvgsspringbootdocker'
+  dockerfilePath: '$(Build.SourcesDirectory)/complete/Dockerfile'
+  tag: '$(Build.BuildId)'
+  vmImageName: 'ubuntu-latest'
 
-    echo "Files here:"
-    ls -la
+stages:
+- stage: Build
+  displayName: 'Build and push stage'
+  jobs:
+  - job: Build
+    displayName: 'Build'
+    pool:
+      vmImage: $(vmImageName)
 
-    echo "Find gradlew:"
-    find $(Build.SourcesDirectory) -name gradlew
+    steps:
+    - script: |
+        cd complete
+        chmod +x gradlew
+        ./gradlew build
+      displayName: 'Build with Gradle'
 
-    echo "Find Dockerfile:"
-    find $(Build.SourcesDirectory) -name Dockerfile
-  displayName: 'Debug file locations'
+    - task: Docker@2
+      displayName: 'Build and push an image to container registry'
+      inputs:
+        command: 'buildAndPush'
+        repository: '$(imageRepository)'
+        dockerfile: '$(dockerfilePath)'
+        containerRegistry: '$(dockerRegistryServiceConnection)'
+        tags: |
+          $(tag)
