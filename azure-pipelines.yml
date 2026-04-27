@@ -8,7 +8,7 @@ variables:
   dockerRegistryServiceConnection: 'itatarov'
   imageRepository: 'ivanttrvgsspringbootdocker'
   containerRegistry: 'itatarov.azurecr.io'
-  dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
+  dockerfilePath: '$(Build.SourcesDirectory)/ivanttrv/gs-spring-boot-docker/Dockerfile'
   tag: '$(Build.BuildId)'
   vmImageName: 'ubuntu-latest'
 
@@ -23,6 +23,7 @@ stages:
 
     steps:
     - script: |
+        cd ivanttrv/gs-spring-boot-docker
         chmod +x gradlew
         ./gradlew build
       displayName: 'Build with Gradle'
