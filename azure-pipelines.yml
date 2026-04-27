@@ -7,7 +7,7 @@ resources:
 variables:
   dockerRegistryServiceConnection: 'itatarov'
   imageRepository: 'ivanttrvgsspringbootdocker'
-  dockerfilePath: '$(Build.SourcesDirectory)/complete/Dockerfile'
+  dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
   tag: '$(Build.BuildId)'
   vmImageName: 'ubuntu-latest'
 
